@@ -54,6 +54,8 @@ INSTALLED_APPS = [
     'accounts',
     'drf_yasg',
     'rest_framework_simplejwt',
+    'school',
+
 ]
 
 MIDDLEWARE = [

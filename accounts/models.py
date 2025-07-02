@@ -39,11 +39,10 @@ class User(AbstractBaseUser, PermissionsMixin):
         ('teacher','Teacher'),
         ('student','Student'),
     ]
-
     username = models.CharField(max_length=150, unique=True)
     name = models.CharField(max_length=150)
     family = models.CharField(max_length=150)
-    codemeli = models.BigIntegerField(unique=True,blank=True,null=True)
+    codemeli = models.CharField(max_length=10,blank=False,null=False)
     role = models.CharField(max_length=10, choices=Roel_User,blank=False,null=False)
     confirmation = models.BooleanField(default=False)  
     biography = models.TextField(blank=True, null=True) 

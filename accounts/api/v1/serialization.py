@@ -9,7 +9,6 @@ class TeacherSerializer(serializers.ModelSerializer):
         model = User
         fields = ['pk','username','name','family','codemeli','password','password_confirm']
 
-    
     def validate(self, attrs):
         if attrs.get('password') != attrs.get('password_confirm'):
             raise serializers.ValidationError({"password_confirm": "Passwords do not match."})
@@ -39,6 +38,7 @@ class StudentSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         validated_data.pop('password_confirm') # Remove confirmation field
+        validated_data['codemeli']=validated_data['username']
         user = User.objects.create_user(**validated_data)
         return user
     
@@ -47,3 +47,11 @@ class StudentSerializer(serializers.ModelSerializer):
         if len(value) != 10:
             raise serializers.ValidationError({"detail":"codemeli lenght must 10"})
         return value
+
+class TeacherLoginSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField(write_only=True)
+
+class StudentLoginSerializer(serializers.Serializer):
+    codemeli = serializers.CharField()
+    password = serializers.CharField(write_only = True)

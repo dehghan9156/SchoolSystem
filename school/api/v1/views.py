@@ -45,5 +45,10 @@ class AddStudentApiView(APIView):
         serializer = AddStudendtSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(status=status.HTTP_200_OK)
+            return Response({"message":"student add successfully."},status=status.HTTP_200_OK)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+
+class AddNewsApiView(generics.ListCreateAPIView):
+    permission_classes =[IsTeacherUser]
+    serializer_class = AddNewsSerializer
+    queryset = News.objects.all()

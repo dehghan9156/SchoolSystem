@@ -18,5 +18,25 @@ class ClassRoom(models.Model):
     teacher = models.ForeignKey(User,on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.teacher.name}"
-    
+        return f"{self.name}"
+
+class Lesson(models.Model):
+    name = models.CharField(max_length=150)
+
+    def __str__(self):
+        return f"{self.name}"
+
+class Studen_Lesson(models.Model):
+    student = models.ForeignKey(User,on_delete=models.CASCADE)
+    lesson = models.ForeignKey(Lesson,on_delete=models.CASCADE)
+
+
+
+class News(models.Model):
+    title = models.CharField(max_length=150)
+    text = models.TextField()
+    lesson = models.ForeignKey(Lesson,on_delete=models.CASCADE)
+    classroom = models.ForeignKey(ClassRoom,on_delete=models.CASCADE)
+    created_by = models.ForeignKey(User,on_delete=models.CASCADE)
+    created_date = models.DateTimeField(auto_now_add=True)
+    updated_date = models.DateTimeField(auto_now=True)

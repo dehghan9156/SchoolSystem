@@ -14,12 +14,14 @@ from rest_framework.generics import CreateAPIView,GenericAPIView
 from .serialization import *
 from ...models import *
 from drf_yasg.utils import swagger_auto_schema
+from .permissions import IsStudentUser,IsTeacherUser
+
 
 class AddSchoolApiView(APIView):
     permission_classes = [IsAdminUser]
-    @swagger_auto_schema(request_body=ScoolSerializer)
+    @swagger_auto_schema(request_body=SchoolSerializer)
     def post(self,request):
-        serializer = ScoolSerializer(data=request.data)
+        serializer = SchoolSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response({"message":"New School Add Successfully."},status=status.HTTP_200_OK)
@@ -28,9 +30,20 @@ class AddSchoolApiView(APIView):
 class AddClassRoomApiView(generics.GenericAPIView):
     queryset = ClassRoom.objects.all()
     serializer_class = ClassRoomSerializer
+    permission_classes =[IsAdminUser]
     def post(self,request):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response({"messages":"classroom add successfully"},status=status.HTTP_200_OK)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+
+class AddStudentApiView(APIView):
+    permission_classes =[IsTeacherUser]
+    @swagger_auto_schema(request_body=AddStudendtSerializer)
+    def post(self,request):
+        serializer = AddStudendtSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=status.HTTP_200_OK)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)

@@ -16,3 +16,7 @@ class Teacher_School(models.Model):
 class ClassRoom(models.Model):
     name = models.CharField(max_length=150)
     teacher = models.ForeignKey(User,on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.teacher.name}"
+    

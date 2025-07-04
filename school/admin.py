@@ -8,7 +8,7 @@ class CustomSchool(ModelAdmin):
     list_display = ["pk","name"]
 
 class CustomClassRoom(ModelAdmin):
-    list_display = ["pk","name"]
+    list_display = ["pk","name","teacher"]
 
 
 

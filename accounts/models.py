@@ -9,10 +9,12 @@ from django.utils.translation import gettext_lazy as _
 class UserManager(BaseUserManager):
 
     def create_user(self, username, password=None, **extra_fields):
+        extra_fields.setdefault("is_staff", False)
         if not username:
             raise ValueError(_("The username must be set"))
         user = self.model(username=username, **extra_fields)
         user.set_password(password)
+
         user.save()
         return user
 

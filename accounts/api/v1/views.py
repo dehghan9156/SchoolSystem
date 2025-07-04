@@ -16,7 +16,9 @@ from ...models import *
 from drf_yasg.utils import swagger_auto_schema
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
-
+from rest_framework_simplejwt.token_blacklist.models import BlacklistedToken, OutstandingToken
+from rest_framework.authtoken.models import Token
+from rest_framework_simplejwt.exceptions import TokenError
 
 
 class UserRegisterApiView(generics.GenericAPIView):
@@ -69,23 +71,39 @@ class UserLoginApiView(generics.GenericAPIView):
         serializer = serializer_class(data=request.data)
         if serializer.is_valid():
             if role=="admin" or role=="teacher":
-                    username = serializer.validated_data['username']
-                    password = serializer.validated_data['password']
+                username = serializer.validated_data['username']
+                password = serializer.validated_data['password']
             elif role=="student":
-                    username = serializer.validated_data["codemeli"]
-                    password = serializer.validated_data["password"]
+                username = serializer.validated_data["codemeli"]
+                password = serializer.validated_data["password"]
             else :
                 return Response({"message":"you can not login the system"},status=status.HTTP_400_BAD_REQUEST)  
     
             user = authenticate(request, username=username, password=password)
             if user :
-                        print(user)
-                        refresh = RefreshToken.for_user(user)
-                        return Response ({
-                            'refresh': str(refresh),
-                            'access': str(refresh.access_token),
-                            'message':'user login successfully.'
-                        })
+                refresh = RefreshToken.for_user(user)
+                return Response ({
+                    'refresh': str(refresh),
+                    'access': str(refresh.access_token),
+                    'username':user.username,
+                    'role':user.role,
+                    'message':'user login successfully.'
+                })
             return Response({"message":"username or password not correct"},status=status.HTTP_400_BAD_REQUEST)
               
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+    
+class UserLogoutApiView(APIView):
+    permission_classes =[IsAuthenticated]
+    @swagger_auto_schema(request_body=UserLogoutSerializer)
+    def post(self,request):
+        serializer = UserLogoutSerializer(data=request.data)
+        if serializer.is_valid():     
+            refresh_token = serializer.validated_data.get("refresh")
+            token = RefreshToken(refresh_token)
+            try:
+                token.blacklist()
+                return Response({"message": "Logout successful"}, status=status.HTTP_205_RESET_CONTENT)
+            except TokenError:
+                return Response({"message":"token already blocked"})
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)

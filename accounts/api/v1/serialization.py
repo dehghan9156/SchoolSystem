@@ -55,3 +55,6 @@ class TeacherLoginSerializer(serializers.Serializer):
 class StudentLoginSerializer(serializers.Serializer):
     codemeli = serializers.CharField()
     password = serializers.CharField(write_only = True)
+
+class UserLogoutSerializer(serializers.Serializer):
+    refresh = serializers.CharField()

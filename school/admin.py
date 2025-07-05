@@ -18,6 +18,8 @@ class CustomLesson(ModelAdmin):
 class CustomNews(ModelAdmin):
     list_display = ["pk","title","lesson","created_by"]
 
+class CustomExercise(ModelAdmin):
+    list_display=["pk","title","lesson","classroom"]
 
 
 admin.site.register(School,CustomSchool)
@@ -26,3 +28,4 @@ admin.site.register(ClassRoom,CustomClassRoom)
 admin.site.register(Lesson,CustomLesson)
 admin.site.register(Studen_Lesson)
 admin.site.register(News,CustomNews)
+admin.site.register(Exercise,CustomExercise)

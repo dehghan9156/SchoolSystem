@@ -40,3 +40,14 @@ class News(models.Model):
     created_by = models.ForeignKey(User,on_delete=models.CASCADE)
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
+
+class Exercise(models.Model):
+    title = models.CharField(max_length=150)
+    content = models.TextField()
+    deadline = models.DateTimeField()
+    file = models.FileField(upload_to="exercise_files/",blank=True,null=True)
+    lesson = models.ForeignKey(Lesson,on_delete=models.CASCADE)
+    classroom = models.ForeignKey(ClassRoom,on_delete=models.CASCADE)
+    created_by = models.ForeignKey(User,on_delete=models.CASCADE)
+    created_date = models.DateTimeField(auto_now_add=True)
+    updated_date = models.DateTimeField(auto_now=True)

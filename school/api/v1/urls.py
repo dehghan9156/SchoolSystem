@@ -8,6 +8,6 @@ urlpatterns = [
     path("add/school/",views.AddSchoolApiView.as_view(),name="add-school"),
     path("add/classroom/",views.AddClassRoomApiView.as_view(),name="add-classroom"),
     path("add/student/",views.AddStudentApiView.as_view(),name="add-student"),
-    path("add/news/",views.AddNewsApiView.as_view(),name="add-news"),
+    path("add/news/<int:pk>/",views.AddNewsApiView.as_view(),name="add-news"),
 
 ]

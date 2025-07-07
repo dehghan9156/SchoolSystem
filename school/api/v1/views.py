@@ -95,3 +95,15 @@ class ReviewsExerciseApiView(APIView):
         exercise = Exercise.objects.filter(lesson__in=lesson_ids,classroom__in=classroom_ids)
         serializer = ExerciseSerializer(exercise,many=True)
         return Response(serializer.data)
+
+class SendExerciseApiView(generics.GenericAPIView):
+    permission_classes = [IsStudentUser]
+    serializer_class = AnswerExerciseSerializer
+    def post(self,request,pk):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            exercise = Exercise.objects.get(pk=pk)
+            AnswerExercise.objects.create(exercise=exercise,student=request.user)
+            return Response({"message":"answerexercise upload success."},status=status.HTTP_200_OK)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+    

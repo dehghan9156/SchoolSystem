@@ -95,3 +95,9 @@ class ExerciseSerializer(serializers.ModelSerializer):
         user = request.user
         validated_data["created_by"]=user
         return super().create(validated_data)
+
+class AnswerExerciseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AnswerExercise
+        fields =["pk","answer_text","answer_file"]
+    

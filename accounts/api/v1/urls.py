@@ -14,6 +14,6 @@ urlpatterns = [
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('logout/',views.UserLogoutApiView.as_view(),name='user_logout'),
-    path("edit/profile/",views.EditTeacherProfileApiView.as_view(),name="edit-profile"),
-
+    path("edit/profile/",views.EditProfileApiView.as_view(),name="edit-profile"),
+    
 ]

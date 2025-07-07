@@ -7,7 +7,7 @@ class CustomUserAdmin(UserAdmin):
     model = User
     list_display = ['pk','name','family','role','confirmation']
     fieldsets = (
-        ("Authentication", {"fields": ("username", "password","codemeli","role")}),
+        ("Authentication", {"fields": ("username", "password","codemeli","role","name","family","biography")}),
         (
             "Permissions",
             {"fields": ("is_staff", "is_active", "is_superuser")},

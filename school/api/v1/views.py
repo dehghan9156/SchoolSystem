@@ -80,8 +80,8 @@ class ReviewsNewsApiView(APIView):
     def get(self,request):
         user = request.user
         classroom_ids = ClassRoom_Student.objects.filter(student=user).values_list("classroom_id",flat=True)
-        lesson_ids = Studen_Lesson.objects.filter(student=user).values_list("lesson_id",flat=True)
-        news = News.objects.filter(classroom_id__in=classroom_ids,lesson_id__in=lesson_ids)
+        teacher_ids = ClassRoom.objects.filter(pk__in=classroom_ids).values_list("teacher_id",flat=True)
+        news = News.objects.filter(created_by__in=teacher_ids,classroom_id__in=classroom_ids)
         serializer = NewsSerializer(news,many=True)
         return Response(serializer.data)
 
@@ -91,8 +91,9 @@ class ReviewsExerciseApiView(APIView):
     def get(self,request):
         user = request.user
         classroom_ids = ClassRoom_Student.objects.filter(student=user).values_list("classroom_id",flat=True)
-        lesson_ids = Studen_Lesson.objects.filter(student=user).values_list("lesson_id",flat=True)
-        exercise = Exercise.objects.filter(lesson__in=lesson_ids,classroom__in=classroom_ids)
+        teacher_ids = ClassRoom.objects.filter(pk__in=classroom_ids).values_list("teacher_id",flat=True)
+        exercise = Exercise.objects.filter(created_by__in=teacher_ids,classroom__in=classroom_ids)
+        
         serializer = ExerciseSerializer(exercise,many=True)
         return Response(serializer.data)
 

@@ -108,11 +108,13 @@ class UserLogoutApiView(APIView):
                 return Response({"message":"token already blocked"})
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
-class EditTeacherProfileApiView(generics.RetrieveUpdateAPIView):
-    permission_classes = [IsTeacherUser]
+class EditProfileApiView(generics.RetrieveUpdateAPIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = UserProfileSerilizer
+    
     def get_object(self):
         return self.request.user
+    
     def put(self,request):
         user = self.get_object()
         serializer = self.serializer_class(user,data=request.data,partial=True)

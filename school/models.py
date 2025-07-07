@@ -20,7 +20,7 @@ class Teacher_School(models.Model):
 
 class ClassRoom(models.Model):
     name = models.CharField(max_length=150)
-    teacher = models.ForeignKey(User,on_delete=models.CASCADE,limit_choices_to={"role":"teacher"})
+    teacher = models.ForeignKey(User,on_delete=models.CASCADE,limit_choices_to={"role__in":["teacher","admin"]})
     school = models.ForeignKey(School,on_delete=models.CASCADE)
 
     def __str__(self):

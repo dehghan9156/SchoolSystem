@@ -58,3 +58,9 @@ class StudentLoginSerializer(serializers.Serializer):
 
 class UserLogoutSerializer(serializers.Serializer):
     refresh = serializers.CharField()
+
+
+class UserProfileSerilizer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["pk","username","name","family","codemeli","biography","longitude","latitude"]

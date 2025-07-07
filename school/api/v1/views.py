@@ -48,7 +48,27 @@ class AddStudentApiView(APIView):
             return Response({"message":"student add successfully."},status=status.HTTP_200_OK)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
-class AddNewsApiView(generics.RetrieveUpdateDestroyAPIView):
+class AddNewsApiView(generics.ListCreateAPIView):
     permission_classes =[IsTeacherUser]
-    serializer_class = AddNewsSerializer
+    serializer_class = NewsSerializer
     queryset = News.objects.all()
+
+class AddExerciseApiView(generics.ListCreateAPIView):
+    serializer_class = ExerciseSerializer
+    queryset = Exercise.objects.all()
+    permission_classes = [IsTeacherUser]
+
+class EditExerciseApiView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsTeacherUser]
+    serializer_class = ExerciseSerializer
+
+    def get_queryset(self):
+        exercise = Exercise.objects.filter(created_by=self.request.user)    
+        return exercise
+
+class EditNewsApiView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes=[IsTeacherUser]
+    serializer_class =NewsSerializer
+    def get_queryset(self):
+        news = News.objects.filter(created_by=self.request.user)
+        return news

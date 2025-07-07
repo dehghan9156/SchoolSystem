@@ -12,4 +12,6 @@ urlpatterns = [
     path("add/exercise/",views.AddExerciseApiView.as_view(),name="add-exercise"),
     path("edit/exercise/<int:pk>/",views.EditExerciseApiView.as_view(),name="edit-exercise"),
     path("edit/news/<int:pk>/",views.EditNewsApiView.as_view(),name="edit-news"),
+    path("review/news/",views.ReviewsNewsApiView.as_view(),name="reviews-news"),
+    path("review/exercise/",views.ReviewsExerciseApiView.as_view(),name="review-exercise"),
 ]

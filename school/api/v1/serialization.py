@@ -53,10 +53,23 @@ class ClassRoomSerializer(serializers.Serializer):
 
 class AddStudendtSerializer(serializers.Serializer):
     codemeli = serializers.CharField()
+    classroom_id = serializers.IntegerField()
+    lesson_id = serializers.IntegerField()
 
     def create(self, validated_data):
+        classroom_id = validated_data.pop("classroom_id")
+        lesson_id = validated_data.pop("lesson_id")
+        
+        classroom = ClassRoom.objects.get(pk=classroom_id)
+        lesson = Lesson.objects.get(pk=lesson_id)
+        
         codemeli=validated_data['codemeli']
+        
         user = User.objects.create_user(username=codemeli,codemeli=codemeli,role="student")
+
+        student_lesson = Studen_Lesson.objects.create(student=user,lesson=lesson)
+        classroom_student = ClassRoom_Student.objects.create(student=user,classroom=classroom)
+        
         return user
 
 class NewsSerializer(serializers.ModelSerializer):

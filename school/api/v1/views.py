@@ -38,11 +38,12 @@ class AddClassRoomApiView(generics.GenericAPIView):
             return Response({"messages":"classroom add successfully"},status=status.HTTP_200_OK)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
-class AddStudentApiView(APIView):
+class AddStudentApiView(generics.GenericAPIView):
     permission_classes =[IsTeacherUser]
-    @swagger_auto_schema(request_body=AddStudendtSerializer)
+    serializer_class = AddStudendtSerializer
+
     def post(self,request):
-        serializer = AddStudendtSerializer(data=request.data)
+        serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response({"message":"student add successfully."},status=status.HTTP_200_OK)
@@ -72,3 +73,25 @@ class EditNewsApiView(generics.RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         news = News.objects.filter(created_by=self.request.user)
         return news
+
+class ReviewsNewsApiView(APIView):
+    permission_classes = [IsStudentUser]
+    
+    def get(self,request):
+        user = request.user
+        classroom_ids = ClassRoom_Student.objects.filter(student=user).values_list("classroom_id",flat=True)
+        lesson_ids = Studen_Lesson.objects.filter(student=user).values_list("lesson_id",flat=True)
+        news = News.objects.filter(classroom_id__in=classroom_ids,lesson_id__in=lesson_ids)
+        serializer = NewsSerializer(news,many=True)
+        return Response(serializer.data)
+
+class ReviewsExerciseApiView(APIView):
+    permission_classes =[IsStudentUser]
+    
+    def get(self,request):
+        user = request.user
+        classroom_ids = ClassRoom_Student.objects.filter(student=user).values_list("classroom_id",flat=True)
+        lesson_ids = Studen_Lesson.objects.filter(student=user).values_list("lesson_id",flat=True)
+        exercise = Exercise.objects.filter(lesson__in=lesson_ids,classroom__in=classroom_ids)
+        serializer = ExerciseSerializer(exercise,many=True)
+        return Response(serializer.data)

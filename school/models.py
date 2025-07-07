@@ -26,9 +26,9 @@ class ClassRoom(models.Model):
     def __str__(self):
         return f"{self.name}"
 
-# class ClassRoom_Student(models.Model):
-#     student = models.ForeignKey(User,on_delete=models.CASCADE,limit_choices_to={"role":"student"})
-#     classroom = models.ForeignKey(ClassRoom,on_delete=models.CASCADE)
+class ClassRoom_Student(models.Model):
+    student = models.ForeignKey(User,on_delete=models.CASCADE,limit_choices_to={"role":"student"})
+    classroom = models.ForeignKey(ClassRoom,on_delete=models.CASCADE)
 
 
 class Lesson(models.Model):
@@ -48,7 +48,7 @@ class News(models.Model):
     text = models.TextField()
     lesson = models.ForeignKey(Lesson,on_delete=models.CASCADE)
     classroom = models.ForeignKey(ClassRoom,on_delete=models.CASCADE)
-    created_by = models.ForeignKey(User,on_delete=models.CASCADE)
+    created_by = models.ForeignKey(User,on_delete=models.CASCADE,limit_choices_to={"role__in":["teacher","admin"]})
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
 
@@ -59,6 +59,6 @@ class Exercise(models.Model):
     file = models.FileField(upload_to="exercise_files/",blank=True,null=True)
     lesson = models.ForeignKey(Lesson,on_delete=models.CASCADE)
     classroom = models.ForeignKey(ClassRoom,on_delete=models.CASCADE)
-    created_by = models.ForeignKey(User,on_delete=models.CASCADE)
+    created_by = models.ForeignKey(User,on_delete=models.CASCADE,limit_choices_to={"role__in":["teacher","admin"]})
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)

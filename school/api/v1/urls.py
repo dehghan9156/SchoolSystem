@@ -15,5 +15,5 @@ urlpatterns = [
     path("review/news/",views.ReviewsNewsApiView.as_view(),name="reviews-news"),
     path("review/exercise/",views.ReviewsExerciseApiView.as_view(),name="review-exercise"),
     path("send/exercise/<int:pk>/",views.SendExerciseApiView.as_view(),name="send-exercise"),
-    # path("edit/a")
+    path("edit/answerexercise/<int:pk>/",views.EditAnswerExercise.as_view(),name="edit-answerexercise"),
 ]

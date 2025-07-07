@@ -33,7 +33,7 @@ class CustomStudent_Lesson(ModelAdmin):
     list_display = ["pk","student","lesson"]
 
 class CustomAnswerExercise(ModelAdmin):
-    list_display = ["pk","exercise","student"]
+    list_display = ["pk","exercise","student","submited_date"]
 
 
 admin.site.register(School,CustomSchool)

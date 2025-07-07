@@ -15,7 +15,7 @@ from .serialization import *
 from ...models import *
 from drf_yasg.utils import swagger_auto_schema
 from .permissions import IsStudentUser,IsTeacherUser
-
+from django.utils import timezone
 
 class AddSchoolApiView(generics.GenericAPIView):
     permission_classes = [IsAdminUser]
@@ -107,3 +107,18 @@ class SendExerciseApiView(generics.GenericAPIView):
             return Response({"message":"answerexercise upload success."},status=status.HTTP_200_OK)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
     
+class EditAnswerExercise(generics.GenericAPIView):
+    serializer_class = AnswerExerciseSerializer
+    permission_classes=[IsStudentUser]
+    def put(self,request,pk):
+        answerexercise = AnswerExercise.objects.get(pk=pk)
+        exercise  = answerexercise.exercise
+        deadline = exercise.deadline
+        current_time = timezone.now()
+        if current_time>deadline:
+            return Response({"message":"sorry.you can not upload you answer because the time has passed"})
+        serializer = self.serializer_class(answerexercise,data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message":"you answerexercise successfully edited."},status=status.HTTP_200_OK)
+

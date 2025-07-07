@@ -62,3 +62,14 @@ class Exercise(models.Model):
     created_by = models.ForeignKey(User,on_delete=models.CASCADE,limit_choices_to={"role__in":["teacher","admin"]})
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.pk}-{self.title}"
+
+class AnswerExercise(models.Model):
+    exercise = models.ForeignKey(Exercise,on_delete=models.CASCADE)
+    student = models.ForeignKey(User,on_delete=models.CASCADE)
+    answer_text = models.TextField()
+    answer_file = models.FileField(upload_to="answer_exercise/",blank=True,null=True)
+    submited_date = models.DateTimeField(auto_now_add=True)
+

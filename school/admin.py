@@ -32,6 +32,9 @@ class CustomClassRoom_Student(ModelAdmin):
 class CustomStudent_Lesson(ModelAdmin):
     list_display = ["pk","student","lesson"]
 
+class CustomAnswerExercise(ModelAdmin):
+    list_display = ["pk","exercise","student"]
+
 
 admin.site.register(School,CustomSchool)
 admin.site.register(Teacher_School,CustomTeacher_school)
@@ -41,3 +44,4 @@ admin.site.register(Studen_Lesson,CustomStudent_Lesson)
 admin.site.register(News,CustomNews)
 admin.site.register(Exercise,CustomExercise)
 admin.site.register(ClassRoom_Student,CustomClassRoom_Student)
+admin.site.register(AnswerExercise,CustomAnswerExercise)

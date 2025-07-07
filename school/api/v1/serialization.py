@@ -5,10 +5,26 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
-class SchoolSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = School
-        fields = ['pk','name','longitude','latitude']
+class AddSchoolSerializer(serializers.Serializer):
+    name = serializers.CharField()
+    longitude = serializers.DecimalField(max_digits=9, decimal_places=6)
+    latitude = serializers.DecimalField(max_digits=9, decimal_places=6)
+    teacher_id = serializers.IntegerField()
+
+    def validate_teacher_id(self, value):
+        teacher_id = User.objects.filter(id=value,role="teacher")
+        if not teacher_id.exists():
+            raise serializers.ValidationError("tecaher not found")
+        return value
+
+
+    def create(self, validated_data):
+        teacher_id = validated_data.pop("teacher_id")
+        teacher = User.objects.get(pk=teacher_id)
+        school = School.objects.create(**validated_data)
+        teacher_school = Teacher_School.objects.create(teacher=teacher,school=school)
+        return school
+ 
 
 class ClassRoomSerializer(serializers.ModelSerializer):
     teacher = serializers.PrimaryKeyRelatedField(

@@ -7,6 +7,11 @@ from django.contrib.admin import ModelAdmin
 class CustomSchool(ModelAdmin):
     list_display = ["pk","name"]
 
+class CustomTeacher_school(ModelAdmin):
+    list_display=["pk","teacher","school"]
+
+
+
 class CustomClassRoom(ModelAdmin):
     list_display = ["pk","name","teacher"]
 
@@ -23,7 +28,7 @@ class CustomExercise(ModelAdmin):
 
 
 admin.site.register(School,CustomSchool)
-admin.site.register(Teacher_School)
+admin.site.register(Teacher_School,CustomTeacher_school)
 admin.site.register(ClassRoom,CustomClassRoom)
 admin.site.register(Lesson,CustomLesson)
 admin.site.register(Studen_Lesson)

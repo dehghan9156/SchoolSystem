@@ -17,11 +17,11 @@ from drf_yasg.utils import swagger_auto_schema
 from .permissions import IsStudentUser,IsTeacherUser
 
 
-class AddSchoolApiView(APIView):
+class AddSchoolApiView(generics.GenericAPIView):
     permission_classes = [IsAdminUser]
-    @swagger_auto_schema(request_body=SchoolSerializer)
+    serializer_class= AddSchoolSerializer
     def post(self,request):
-        serializer = SchoolSerializer(data=request.data)
+        serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response({"message":"New School Add Successfully."},status=status.HTTP_200_OK)

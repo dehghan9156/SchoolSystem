@@ -26,18 +26,31 @@ class AddSchoolSerializer(serializers.Serializer):
         return school
  
 
-class ClassRoomSerializer(serializers.ModelSerializer):
-    teacher = serializers.PrimaryKeyRelatedField(
-        queryset=User.objects.filter(role="teacher"),
-    )
-    teacher_name = serializers.SerializerMethodField()
-    class Meta:
-        model = ClassRoom
-        fields = ["pk","name","teacher","teacher_name"]
+class ClassRoomSerializer(serializers.Serializer):
+    name = serializers.CharField()
+    teacher_id = serializers.IntegerField()
+    school_id = serializers.IntegerField()
     
-    def get_teacher_name(self,obj):
-        return f"{obj.teacher.name}-{obj.teacher.family}"
+    def validate_teacher_id(self, value):
+        teacher_id = User.objects.filter(pk=value,role="teacher")
+        if not teacher_id.exists():
+            raise serializers.ValidationError("teacher not found")
+        return value
     
+    def validate_school_id(self,value):
+        school_id = School.objects.filter(pk=value)
+        if not school_id.exists():
+            raise serializers.ValidationError("school not found")
+        return value
+    
+    def create(self, validated_data):
+        teacher_id = validated_data.pop("teacher_id")
+        school_id = validated_data.pop("school_id")
+        teacher = User.objects.get(pk=teacher_id)
+        school = School.objects.get(pk=school_id)
+        classroom=ClassRoom.objects.create(teacher=teacher,school=school,**validated_data)
+        return classroom
+
 class AddStudendtSerializer(serializers.Serializer):
     codemeli = serializers.CharField()
 

@@ -26,6 +26,11 @@ class ClassRoom(models.Model):
     def __str__(self):
         return f"{self.name}"
 
+# class ClassRoom_Student(models.Model):
+#     student = models.ForeignKey(User,on_delete=models.CASCADE,limit_choices_to={"role":"student"})
+#     classroom = models.ForeignKey(ClassRoom,on_delete=models.CASCADE)
+
+
 class Lesson(models.Model):
     name = models.CharField(max_length=150)
 

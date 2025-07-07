@@ -123,3 +123,8 @@ class EditAnswerExercise(generics.GenericAPIView):
             serializer.save()
             return Response({"message":"you answerexercise successfully edited."},status=status.HTTP_200_OK)
 
+class FullAccessNewApiView(generics.ListCreateAPIView):
+    queryset = News.objects.all()
+    permission_classes =[IsAdminUser]
+    serializer_class = NewsSerializer
+

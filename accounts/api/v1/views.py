@@ -19,7 +19,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.token_blacklist.models import BlacklistedToken, OutstandingToken
 from rest_framework.authtoken.models import Token
 from rest_framework_simplejwt.exceptions import TokenError
-
+from school.api.v1.permissions import *
 
 class UserRegisterApiView(generics.GenericAPIView):
     def get_serializer_class(self):
@@ -106,4 +106,17 @@ class UserLogoutApiView(APIView):
                 return Response({"message": "Logout successful"}, status=status.HTTP_205_RESET_CONTENT)
             except TokenError:
                 return Response({"message":"token already blocked"})
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+
+class EditTeacherProfileApiView(generics.RetrieveUpdateAPIView):
+    permission_classes = [IsTeacherUser]
+    serializer_class = UserProfileSerilizer
+    def get_object(self):
+        return self.request.user
+    def put(self,request):
+        user = self.get_object()
+        serializer = self.serializer_class(user,data=request.data,partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message":"your profile edit successfully."},status=status.HTTP_200_OK)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)

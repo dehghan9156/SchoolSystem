@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'school',
     'rest_framework_simplejwt.token_blacklist',
     'django_filters',
+    'chat',
 
 ]
 

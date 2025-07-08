@@ -57,8 +57,8 @@ INSTALLED_APPS = [
     'school',
     'rest_framework_simplejwt.token_blacklist',
     'django_filters',
-    'chat',
     'channels',
+    'chat',
 
 ]
 
@@ -171,7 +171,7 @@ SWAGGER_SETTINGS = {
     }
 }
 
-ASGI_APPLICATION = 'chat.asgi.application'
+ASGI_APPLICATION = 'schoolsystem.asgi.application'
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',

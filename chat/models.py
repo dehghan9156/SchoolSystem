@@ -1,3 +1,15 @@
 from django.db import models
+from django.contrib.auth import get_user_model
 
-# Create your models here.
+User = get_user_model()
+
+
+class Chatroom(models.Model):
+    name = models.CharField(max_length=150)
+    members = models.ManyToManyField(User)
+
+class Message(models.Model):
+    sender = models.ForeignKey(User,on_delete=models.CASCADE)
+    content = models.TextField()
+    chatroom = models.ForeignKey(Chatroom,on_delete=models.CASCADE) 
+    timestamp = models.DateTimeField(auto_now_add=True)

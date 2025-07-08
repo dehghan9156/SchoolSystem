@@ -4,7 +4,7 @@ from django.core.serializers import serialize
 from django.db.models.fields import return_None
 from django.shortcuts import get_object_or_404
 from django.template.context_processors import request
-from rest_framework import generics
+from rest_framework import generics,viewsets
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
@@ -16,6 +16,9 @@ from ...models import *
 from drf_yasg.utils import swagger_auto_schema
 from .permissions import IsStudentUser,IsTeacherUser
 from django.utils import timezone
+from django_filters.rest_framework import DjangoFilterBackend,OrderingFilter
+from rest_framework import filters
+
 
 class AddSchoolApiView(generics.GenericAPIView):
     permission_classes = [IsAdminUser]
@@ -123,8 +126,20 @@ class EditAnswerExercise(generics.GenericAPIView):
             serializer.save()
             return Response({"message":"you answerexercise successfully edited."},status=status.HTTP_200_OK)
 
-class FullAccessNewApiView(generics.ListCreateAPIView):
+class FullAccessNewApiView(viewsets.ModelViewSet):
     queryset = News.objects.all()
     permission_classes =[IsAdminUser]
     serializer_class = NewsSerializer
+    filter_backends =[DjangoFilterBackend,filters.SearchFilter,filters.OrderingFilter]
+    filter_fields = ["lesson","classroom","created_by"]
+    search_fields = ["id","lesson__name","classroom__name","created_by__username"]
+    ordering_fields = ["id","lessonــname","classroom__name","created_by__username"]
 
+class FullAccessExerciseApiView(viewsets.ModelViewSet):
+    queryset = Exercise.objects.all()
+    permission_classes =[IsAdminUser]
+    serializer_class =ExerciseSerializer
+    filter_backends =[DjangoFilterBackend,filters.SearchFilter,filters.OrderingFilter]
+    filter_fields = ["lesson","classroom","created_by"]
+    search_fields = ["id","lesson__name","classroom__name","created_by__username"]
+    ordering_fields = ["id","lessonــname","classroom__name","created_by__username"]

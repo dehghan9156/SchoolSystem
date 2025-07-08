@@ -22,5 +22,6 @@ urlpatterns = [
     path("send/exercise/<int:pk>/",views.SendExerciseApiView.as_view(),name="send-exercise"),
     path("edit/answerexercise/<int:pk>/",views.EditAnswerExercise.as_view(),name="edit-answerexercise"),
     path("",include(router.urls)),
+    path("review/lesson/",views.ReviewLessonaApiView.as_view(),name="review-lesson"),
     
 ]

@@ -101,3 +101,7 @@ class AnswerExerciseSerializer(serializers.ModelSerializer):
         model = AnswerExercise
         fields =["pk","answer_text","answer_file"]
     
+class LessonSerilizer(serializers.ModelSerializer):
+    class Meta:
+        model = Lesson
+        fields = ["pk","name"]

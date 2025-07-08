@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     'django_filters',
     'chat',
+    'channels',
 
 ]
 
@@ -168,4 +169,14 @@ SWAGGER_SETTINGS = {
             'description': "JWT Authorization header using the Bearer scheme. Example: 'Bearer <token>'",
         }
     }
+}
+
+ASGI_APPLICATION = 'chat.asgi.application'
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
 }

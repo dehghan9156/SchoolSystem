@@ -94,6 +94,8 @@ class ExerciseSerializer(serializers.ModelSerializer):
         request = self.context.get("request")
         user = request.user
         validated_data["created_by"]=user
+        validated_data["file"]=request.FILES.get("file")
+        # print(request.FILES)
         return super().create(validated_data)
 
 class AnswerExerciseSerializer(serializers.ModelSerializer):

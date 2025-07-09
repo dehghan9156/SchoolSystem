@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from accounts.models import User
-
+from django.urls import reverse
 
 class TeacherSerializer(serializers.ModelSerializer):
     # role = serializers.ChoiceField(choices=User.Roel_User)
@@ -60,7 +60,12 @@ class UserLogoutSerializer(serializers.Serializer):
     refresh = serializers.CharField()
 
 
-class UserProfileSerilizer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
+    confirm_url = serializers.SerializerMethodField(source="get_confirm_url")
     class Meta:
         model = User
-        fields = ["pk","username","name","family","codemeli","biography","longitude","latitude"]
+        fields = ["pk","username","name","family","codemeli","biography","longitude","latitude","role","confirmation","confirm_url"]
+        read_only_fields =["role","confirmation","confirm_url"]
+
+    def get_confirm_url(self,obj):
+        return reverse("accounts:api-v1:user-confirm",args=[obj.pk])

@@ -9,7 +9,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework import permissions
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated,IsAdminUser
 from rest_framework.generics import CreateAPIView,GenericAPIView
 from .serialization import *
 from ...models import *
@@ -110,7 +110,7 @@ class UserLogoutApiView(APIView):
 
 class EditProfileApiView(generics.RetrieveUpdateAPIView):
     permission_classes = [IsAuthenticated]
-    serializer_class = UserProfileSerilizer
+    serializer_class = UserSerializer
     
     def get_object(self):
         return self.request.user
@@ -122,3 +122,19 @@ class EditProfileApiView(generics.RetrieveUpdateAPIView):
             serializer.save()
             return Response({"message":"your profile edit successfully."},status=status.HTTP_200_OK)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+
+class GetUsersApiView(APIView):
+    permission_classes=[IsAdminUser]
+    def get(self,request):
+        users = User.objects.filter(role__in=["teacher","student"])
+        serializer = UserSerializer(users,many=True)
+        return Response(serializer.data)
+
+
+class UserConfirmApiView(APIView):
+    def patch(self,request,pk):
+        user = User.objects.get(pk=pk)
+        user.confirmation = not user.confirmation        
+        user.save()
+        serializer = UserSerializer(user)
+        return Response(serializer.data)

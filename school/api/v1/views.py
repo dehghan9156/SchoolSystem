@@ -144,6 +144,16 @@ class FullAccessExerciseApiView(viewsets.ModelViewSet):
     search_fields = ["id","lesson__name","classroom__name","created_by__username"]
     ordering_fields = ["id","lessonــname","classroom__name","created_by__username"]
 
+class FullAccessLessonApiView(viewsets.ModelViewSet):
+    queryset = Lesson.objects.all()
+    permission_classes = [IsAdminUser]
+    serializer_class = LessonSerilizer
+    filter_backends =[DjangoFilterBackend,filters.SearchFilter,filters.OrderingFilter]
+    filter_fields = ["lesson"]
+    search_fields = ["id","name"]
+    ordering_fields = ["id","name"]
+
+
 class ReviewLessonaApiView(APIView):
     permission_classes=[IsStudentUser]
     

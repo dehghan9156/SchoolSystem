@@ -8,6 +8,8 @@ app_name="api-v1"
 router = DefaultRouter()
 router.register(r"admin/news",views.FullAccessNewApiView,basename="admin-news")
 router.register(r"admin/exercise",views.FullAccessExerciseApiView,basename="admin-exercise")
+router.register(r"admin/lesson",views.FullAccessLessonApiView,basename="admin-lesson")
+
 
 urlpatterns = [
     path("add/school/",views.AddSchoolApiView.as_view(),name="add-school"),

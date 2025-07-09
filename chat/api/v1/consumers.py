@@ -5,11 +5,6 @@ from chat.models import *
 
 
 class WebsocketConsumer(AsyncWebsocketConsumer):
-    @database_sync_to_async
-    def create_chat(self, msg, sender,room_name):
-        chatroom,_ = Chatroom.objects.get_or_create(name=room_name)
-        sender = self.scope["user"]
-        return Message.objects.create(sender=sender, content=msg ,chatroom=chatroom)
     
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
@@ -31,21 +26,26 @@ class WebsocketConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         data = json.loads(text_data)
         message = data['message']
-
-        # await self.create_chat(message,self.room_name)
-        # print(self.scope["user"])
-
+        user = self.scope['user']
+        
         
         await self.channel_layer.group_send(
             self.room_group_name,
             {
                 'type': 'chat_message',
-                'message': message
+                'message': message,
+                'user' :user.username
             }
         )
 
     async def chat_message(self, event):
         message = event['message']
         await self.send(text_data=json.dumps({
-            'message': message
+            'message': message,
         })) 
+# 
+    # @database_sync_to_async
+    # def save_message(self, sender, room_name, msg):
+
+    #     chatroom, _ = Chatroom.objects.get_or_create(name=room_name)
+    #     Message.objects.create(sender=sender, content=msg, chatroom=chatroom)

@@ -30,16 +30,16 @@ class AddSchoolApiView(generics.GenericAPIView):
             return Response({"message":"New School Add Successfully."},status=status.HTTP_200_OK)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
-class AddClassRoomApiView(generics.GenericAPIView):
-    queryset = ClassRoom.objects.all()
-    serializer_class = ClassRoomSerializer
-    permission_classes =[IsAdminUser]
-    def post(self,request):
-        serializer = self.serializer_class(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({"messages":"classroom add successfully"},status=status.HTTP_200_OK)
-        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+# class AddClassRoomApiView(generics.GenericAPIView):
+#     queryset = ClassRoom.objects.all()
+#     serializer_class = ClassRoomSerializer
+#     permission_classes =[IsAdminUser]
+#     def post(self,request):
+#         serializer = self.serializer_class(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response({"messages":"classroom add successfully"},status=status.HTTP_200_OK)
+#         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 class AddStudentApiView(generics.GenericAPIView):
     permission_classes =[IsTeacherUser]
@@ -152,6 +152,15 @@ class FullAccessLessonApiView(viewsets.ModelViewSet):
     filter_fields = ["lesson"]
     search_fields = ["id","name"]
     ordering_fields = ["id","name"]
+
+class FullAccessClassroomApiView(viewsets.ModelViewSet):
+    queryset = ClassRoom.objects.all()
+    permission_classes = [IsAdminUser]
+    serializer_class = ClassRoomSerializer
+    filter_backends =[DjangoFilterBackend,filters.SearchFilter,filters.OrderingFilter]
+    filter_fields = ["name","teacher_id","school_id"]
+    search_fields = ["id","name","teacher__name","school__name"]
+    ordering_fields = ["id","name","teacher__name","school__name"]
 
 
 class ReviewLessonaApiView(APIView):

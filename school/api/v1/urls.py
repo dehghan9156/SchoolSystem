@@ -9,11 +9,11 @@ router = DefaultRouter()
 router.register(r"admin/news",views.FullAccessNewApiView,basename="admin-news")
 router.register(r"admin/exercise",views.FullAccessExerciseApiView,basename="admin-exercise")
 router.register(r"admin/lesson",views.FullAccessLessonApiView,basename="admin-lesson")
-
+router.register(r"admin/classroom",views.FullAccessClassroomApiView,basename="admin-classroom")
 
 urlpatterns = [
     path("add/school/",views.AddSchoolApiView.as_view(),name="add-school"),
-    path("add/classroom/",views.AddClassRoomApiView.as_view(),name="add-classroom"),
+    # path("add/classroom/",views.AddClassRoomApiView.as_view(),name="add-classroom"),
     path("add/student/",views.AddStudentApiView.as_view(),name="add-student"),
     path("add/news/",views.AddNewsApiView.as_view(),name="add-news"),
     path("add/exercise/",views.AddExerciseApiView.as_view(),name="add-exercise"),

@@ -5,6 +5,7 @@ from rest_framework.routers import DefaultRouter
 
 app_name="api-v1"
 
+
 router = DefaultRouter()
 router.register(r"admin/news",views.FullAccessNewApiView,basename="admin-news")
 router.register(r"admin/exercise",views.FullAccessExerciseApiView,basename="admin-exercise")

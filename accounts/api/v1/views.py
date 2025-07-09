@@ -87,8 +87,8 @@ class UserLoginApiView(generics.GenericAPIView):
                     'access': str(refresh.access_token),
                     'username':user.username,
                     'role':user.role,
-                    'message':'user login successfully.'
-                })
+                    'message':'user login successfully.',                    
+                },status=status.HTTP_200_OK)
             return Response({"message":"username or password not correct"},status=status.HTTP_400_BAD_REQUEST)
               
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)

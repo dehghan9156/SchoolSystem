@@ -188,4 +188,9 @@ class ReviewLessonaApiView(APIView):
         return Response(serializer.data,status=status.HTTP_200_OK)
     
 
-
+class LessonPublicApiView(APIView):
+    
+    def get(self,request):
+        lesson = Lesson.objects.filter(is_public=True)
+        serializer = LessonSerilizer(lesson,many=True)
+        return Response(serializer.data,status=status.HTTP_200_OK)

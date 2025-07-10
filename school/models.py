@@ -33,7 +33,7 @@ class ClassRoom_Student(models.Model):
 
 class Lesson(models.Model):
     name = models.CharField(max_length=150)
-
+    is_public = models.BooleanField(default=False)
     def __str__(self):
         return f"{self.name}"
 

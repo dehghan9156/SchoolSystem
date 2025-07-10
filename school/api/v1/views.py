@@ -56,7 +56,7 @@ class AddNewsApiView(generics.ListCreateAPIView):
     permission_classes =[IsTeacherUser]
     serializer_class = NewsSerializer
     queryset = News.objects.all()
-
+    
 class AddExerciseApiView(generics.ListCreateAPIView):
     serializer_class = ExerciseSerializer
     queryset = Exercise.objects.all()

@@ -9,21 +9,29 @@ class AddSchoolSerializer(serializers.Serializer):
     name = serializers.CharField()
     longitude = serializers.DecimalField(max_digits=9, decimal_places=6)
     latitude = serializers.DecimalField(max_digits=9, decimal_places=6)
-    teacher_id = serializers.IntegerField()
 
-    def validate_teacher_id(self, value):
-        teacher_id = User.objects.filter(id=value,role="teacher")
-        if not teacher_id.exists():
+    def create(self, validated_data):
+        return School.objects.create(**validated_data)
+
+class AddTeacherToSchoolSerializer(serializers.Serializer):
+    teacher_id = serializers.IntegerField()
+    school_id = serializers.IntegerField()
+
+    def validate(self, data):
+        teacher = User.objects.filter(id=data["teacher_id"],role="teacher")
+        school = School.objects.get(id=data["school_id"])
+        if not teacher:
             raise serializers.ValidationError("tecaher not found")
-        return value
+        if not school:
+            raise serializers.ValidationError("school not found.")
+        return data
 
 
     def create(self, validated_data):
-        teacher_id = validated_data.pop("teacher_id")
-        teacher = User.objects.get(pk=teacher_id)
-        school = School.objects.create(**validated_data)
+        teacher = User.objects.get(pk=validated_data["teacher_id"])
+        school = School.objects.get(pk=validated_data["school_id"])
         teacher_school = Teacher_School.objects.create(teacher=teacher,school=school)
-        return school
+        return {"message":"teacher add into school"}
  
 
 class ClassRoomSerializer(serializers.Serializer):

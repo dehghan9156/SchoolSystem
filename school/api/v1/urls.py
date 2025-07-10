@@ -14,6 +14,7 @@ router.register(r"admin/classroom",views.FullAccessClassroomApiView,basename="ad
 
 urlpatterns = [
     path("add/school/",views.AddSchoolApiView.as_view(),name="add-school"),
+    path("add/teacher/to/school/",views.AddTeacherToschoolApiView.as_view(),name="add-teacher-to-school"),
     path("add/student/",views.AddStudentApiView.as_view(),name="add-student"),
     path("add/news/",views.AddNewsApiView.as_view(),name="add-news"),
     path("add/exercise/",views.AddExerciseApiView.as_view(),name="add-exercise"),
@@ -25,5 +26,4 @@ urlpatterns = [
     path("edit/answerexercise/<int:pk>/",views.EditAnswerExercise.as_view(),name="edit-answerexercise"),
     path("",include(router.urls)),
     path("review/lesson/",views.ReviewLessonaApiView.as_view(),name="review-lesson"),
-    
 ]

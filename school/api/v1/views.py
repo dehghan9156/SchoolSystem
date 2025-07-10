@@ -18,6 +18,7 @@ from .permissions import IsStudentUser,IsTeacherUser
 from django.utils import timezone
 from django_filters.rest_framework import DjangoFilterBackend,OrderingFilter
 from rest_framework import filters
+from django.contrib.gis.measure import Distance
 
 
 class AddSchoolApiView(generics.GenericAPIView):
@@ -29,6 +30,19 @@ class AddSchoolApiView(generics.GenericAPIView):
             serializer.save()
             return Response({"message":"New School Add Successfully."},status=status.HTTP_200_OK)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+
+class AddTeacherToschoolApiView(generics.GenericAPIView):
+    permission_classes = [IsAdminUser]
+    serializer_class = AddTeacherToSchoolSerializer
+    def post(self,request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message":"teacher into school add successfully."},status=status.HTTP_200_OK)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+        
+
+
 
 # class AddClassRoomApiView(generics.GenericAPIView):
 #     queryset = ClassRoom.objects.all()
@@ -173,3 +187,5 @@ class ReviewLessonaApiView(APIView):
         serializer = LessonSerilizer(lesson,many=True)
         return Response(serializer.data,status=status.HTTP_200_OK)
     
+
+

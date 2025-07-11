@@ -27,27 +27,40 @@ class WebsocketConsumer(AsyncWebsocketConsumer):
         print("recive message")
         data = json.loads(text_data)
         message = data['message']
-        user = self.scope['user']
+        sender = self.scope['user']
         room_name = self.scope["url_route"]["kwargs"]["room_name"]
-        print(user,room_name)
-        await self.save_message(user,room_name,message)
+        reciver_id = data['reciver_id']
+        # print(sender,room_name)
+        receiver = await self.user_reciver(reciver_id) 
+        
+        await self.save_message(sender,room_name,message,receiver)
         
         await self.channel_layer.group_send(
             self.room_group_name,
             {
                 'type': 'chat_message',
                 'message': message,
-                'user' :user.username
+                'sender' :sender.username,
+                'reciver':receiver.username
             }
         )
 
     async def chat_message(self, event):
         message = event['message']
+        sender = event['sender']
+        reciver = event['reciver']
         await self.send(text_data=json.dumps({
             'message': message,
+            'sender' :sender,
+            'reciver':reciver,
         })) 
 
     @database_sync_to_async
-    def save_message(self, sender, room_name, msg):
+    def save_message(self, sender, room_name, msg,reciver):
         chatroom, _ = Chatroom.objects.get_or_create(name=room_name)
-        Message.objects.create(sender=sender, content=msg, chatroom=chatroom)
+        Message.objects.create(sender=sender, content=msg, chatroom=chatroom,reciver=reciver)
+
+    @database_sync_to_async
+    def user_reciver(self,reciver_id):
+        reciver = User.objects.get(pk=reciver_id)
+        return reciver

@@ -8,10 +8,11 @@ django.setup()
 from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.auth import AuthMiddlewareStack
 from chat.api.v1.routing import websocket_urlpatterns
+from chat.api.v1.middleware import TokenAuthMiddlewareStack
 
 application = ProtocolTypeRouter({
     "http": get_asgi_application(),
-    "websocket": AuthMiddlewareStack(
+    "websocket": TokenAuthMiddlewareStack(
         URLRouter(
             websocket_urlpatterns
         )

@@ -192,3 +192,6 @@ class LessonPublicApiView(APIView):
         return Response(serializer.data,status=status.HTTP_200_OK)
 
 
+class AddUserClassRoom(APIView):
+    def post(self,request):
+        pass

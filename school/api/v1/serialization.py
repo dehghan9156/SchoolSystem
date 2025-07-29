@@ -115,3 +115,9 @@ class LessonSerilizer(serializers.ModelSerializer):
     class Meta:
         model = Lesson
         fields = ["pk","name"]
+
+class ClassRoomMemberSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=ClassRoomMember
+        fields=["pk","user","classroom","role"]
+        

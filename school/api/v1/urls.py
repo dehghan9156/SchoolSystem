@@ -27,5 +27,5 @@ urlpatterns = [
     path("",include(router.urls)),
     path("review/lesson/",views.ReviewLessonaApiView.as_view(),name="review-lesson"),
     path("lessons/public/",views.LessonPublicApiView.as_view(),name="lessons-public"),
-    
+    path("add/user/classroom/",views.AddUserClassRoom.as_view(),name="add-user-classroom"),
 ]

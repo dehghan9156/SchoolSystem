@@ -35,6 +35,8 @@ class CustomStudent_Lesson(ModelAdmin):
 class CustomAnswerExercise(ModelAdmin):
     list_display = ["pk","exercise","student","submited_date"]
 
+class CustomClassroomMember(ModelAdmin):
+    list_display = ["pk","user","classroom","role"]
 
 admin.site.register(School,CustomSchool)
 admin.site.register(Teacher_School,CustomTeacher_school)
@@ -45,3 +47,4 @@ admin.site.register(News,CustomNews)
 admin.site.register(Exercise,CustomExercise)
 admin.site.register(ClassRoom_Student,CustomClassRoom_Student)
 admin.site.register(AnswerExercise,CustomAnswerExercise)
+admin.site.register(ClassRoomMember,CustomClassroomMember)

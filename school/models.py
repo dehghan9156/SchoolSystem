@@ -73,3 +73,13 @@ class AnswerExercise(models.Model):
     answer_file = models.FileField(upload_to="answer_exercise/",blank=True,null=True)
     submited_date = models.DateTimeField(auto_now_add=True)
 
+
+class ClassRoomMember(models.Model):
+    Roel_User = [
+        ('teacher','Teacher'),
+        ('student','Student'),
+    ]
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    classroom = models.ForeignKey(ClassRoom,on_delete=models.CASCADE)
+    role = models.CharField(choices=Roel_User,max_length=150)
+    

@@ -20,6 +20,10 @@ from rest_framework_simplejwt.token_blacklist.models import BlacklistedToken, Ou
 from rest_framework.authtoken.models import Token
 from rest_framework_simplejwt.exceptions import TokenError
 from school.api.v1.permissions import *
+from guardian.shortcuts import assign_perm
+from django.contrib.auth.models import Group
+
+
 
 class UserRegisterApiView(generics.GenericAPIView):
     def get_serializer_class(self):
@@ -29,6 +33,7 @@ class UserRegisterApiView(generics.GenericAPIView):
     
     def post(self,request,role):
         serializer_class = self.get_serializer_class()
+        print(serializer_class)
         serializer = serializer_class(data=request.data)
         if serializer.is_valid():
             if role == "teacher":
@@ -40,6 +45,12 @@ class UserRegisterApiView(generics.GenericAPIView):
                     password = serializer.validated_data['password'],
                     role = role
                 )
+                group,_ = Group.objects.get_or_create(name="Teachers")
+                user.groups.add(group)
+                
+                # assign_perm("is_teacher",group)
+                print("group add")
+                user.save()
                 return Response({"message":"user register successfully."},status=status.HTTP_200_OK)
                     
             elif role == 'student':
@@ -51,6 +62,10 @@ class UserRegisterApiView(generics.GenericAPIView):
                     password = serializer.validated_data['password'],
                     role = role
                 )
+                group,_ = Group.objects.get_or_create(name="Students")
+                user.groups.add(group)
+                # assign_perm("is_student",group)
+                user.save()
                 return Response({"message":"user register successfully."},status=status.HTTP_200_OK)
 
             else:

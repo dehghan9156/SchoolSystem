@@ -121,3 +121,6 @@ class ClassRoomMemberSerializer(serializers.ModelSerializer):
         model=ClassRoomMember
         fields=["pk","user","classroom","role"]
         
+class AddUserClassRoomSerializer(serializers.Serializer):
+    user_id = serializers.IntegerField()
+    role = serializers.ChoiceField(choices=[("teacher","Teacher"),("student","Student")])

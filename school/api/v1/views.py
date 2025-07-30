@@ -19,7 +19,12 @@ from django.utils import timezone
 from django_filters.rest_framework import DjangoFilterBackend,OrderingFilter
 from rest_framework import filters
 from django.contrib.gis.measure import Distance
-
+from guardian.shortcuts import assign_perm
+from django.http import HttpResponse
+from guardian.shortcuts import assign_perm
+from django.contrib.auth.models import Group
+from rest_framework.decorators import action
+from rest_framework.permissions import DjangoModelPermissions,DjangoObjectPermissions
 
 class AddSchoolApiView(generics.GenericAPIView):
     permission_classes = [IsAdminUser]
@@ -166,7 +171,8 @@ class FullAccessLessonApiView(viewsets.ModelViewSet):
 
 class FullAccessClassroomApiView(viewsets.ModelViewSet):
     queryset = ClassRoom.objects.all()
-    permission_classes = [IsAdminUser]
+    # permission_classes = [IsAdminUser]
+    permission_classes = [DjangoModelPermissions,DjangoObjectPermissions]
     serializer_class = ClassRoomSerializer
     filter_backends =[DjangoFilterBackend,filters.SearchFilter,filters.OrderingFilter]
     filter_fields = ["name","teacher_id","school_id"]
@@ -191,7 +197,32 @@ class LessonPublicApiView(APIView):
         serializer = LessonSerilizer(lesson,many=True)
         return Response(serializer.data,status=status.HTTP_200_OK)
 
+class AddUserClassRoom(generics.GenericAPIView):
+    queryset = ClassRoom.objects.all()
+    serializer_class = AddUserClassRoomSerializer
+    
+    def post(self,request,pk):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            
+            user_id = serializer.validated_data["user_id"]
+            role = serializer.validated_data["role"]
+        
+            if not user_id or not role :
+                return Response({"message":"user or role is not exit."})
+            
+            classroom = self.get_object()
+            user = get_object_or_404(User,id=user_id)
 
-class AddUserClassRoom(APIView):
-    def post(self,request):
-        pass
+            if role=="teacher":            
+                assign_perm("is_teacher",user,classroom)
+                return Response(serializer.data)
+
+            elif role =="student":
+                assign_perm("is_student",user,classroom)
+                return Response(serializer.data)
+
+            else:
+                return Response({"error":"invalid role"})
+        
+        return Response(serializer.errors)

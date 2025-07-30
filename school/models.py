@@ -23,6 +23,17 @@ class ClassRoom(models.Model):
     teacher = models.ForeignKey(User,on_delete=models.CASCADE,limit_choices_to={"role__in":["teacher","admin"]})
     school = models.ForeignKey(School,on_delete=models.CASCADE)
 
+    class Meta:
+        permissions=[
+            # ("view_classroom", "Can view classroom"),
+            # ("change_classroom", "Can change classroom"),
+            # ("delete_classroom", "Can delete classroom"),
+            # ("add_classroom", "Can add classroom"),
+
+            ('is_student', 'Is Student in this class'),
+            ('is_teacher', 'Is Teacher in this class'),
+        ]
+
     def __str__(self):
         return f"{self.name}"
 
@@ -75,11 +86,11 @@ class AnswerExercise(models.Model):
 
 
 class ClassRoomMember(models.Model):
-    Roel_User = [
+    Role_User = [
         ('teacher','Teacher'),
         ('student','Student'),
     ]
     user = models.ForeignKey(User,on_delete=models.CASCADE)
     classroom = models.ForeignKey(ClassRoom,on_delete=models.CASCADE)
-    role = models.CharField(choices=Roel_User,max_length=150)
+    role = models.CharField(choices=Role_User,max_length=150)
     

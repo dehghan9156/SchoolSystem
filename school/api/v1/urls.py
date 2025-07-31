@@ -11,7 +11,10 @@ router.register(r"admin/news",views.FullAccessNewApiView,basename="admin-news")
 router.register(r"admin/exercise",views.FullAccessExerciseApiView,basename="admin-exercise")
 router.register(r"admin/lesson",views.FullAccessLessonApiView,basename="admin-lesson")
 router.register(r"admin/classroom",views.FullAccessClassroomApiView,basename="admin-classroom")
-# router.register(r"add/user/classroom",views.AddUserClassRoom,basename="add-user-classroom")
+router.register(r"news/filter",views.NewsFilterApiView,basename="news-filter")
+router.register(r"review/news",views.ReviewsNewsApiView,basename="review-news")
+
+
 urlpatterns = [
     path("add/school/",views.AddSchoolApiView.as_view(),name="add-school"),
     path("add/teacher/to/school/",views.AddTeacherToschoolApiView.as_view(),name="add-teacher-to-school"),
@@ -20,7 +23,7 @@ urlpatterns = [
     path("add/exercise/",views.AddExerciseApiView.as_view(),name="add-exercise"),
     path("edit/exercise/<int:pk>/",views.EditExerciseApiView.as_view(),name="edit-exercise"),
     path("edit/news/<int:pk>/",views.EditNewsApiView.as_view(),name="edit-news"),
-    path("review/news/",views.ReviewsNewsApiView.as_view(),name="reviews-news"),
+    # path("review/news/",views.ReviewsNewsApiView.as_view(),name="reviews-news"),
     path("review/exercise/",views.ReviewsExerciseApiView.as_view(),name="review-exercise"),
     path("send/exercise/<int:pk>/",views.SendExerciseApiView.as_view(),name="send-exercise"),
     path("edit/answerexercise/<int:pk>/",views.EditAnswerExercise.as_view(),name="edit-answerexercise"),

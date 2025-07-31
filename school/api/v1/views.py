@@ -25,6 +25,9 @@ from guardian.shortcuts import assign_perm
 from django.contrib.auth.models import Group
 from rest_framework.decorators import action
 from rest_framework.permissions import DjangoModelPermissions,DjangoObjectPermissions
+from .filters import *
+
+
 
 class AddSchoolApiView(generics.GenericAPIView):
     permission_classes = [IsAdminUser]
@@ -93,16 +96,24 @@ class EditNewsApiView(generics.RetrieveUpdateDestroyAPIView):
         news = News.objects.filter(created_by=self.request.user)
         return news
 
-class ReviewsNewsApiView(APIView):
-    permission_classes = [IsStudentUser]
+# class ReviewsNewsApiView(APIView):
+#     permission_classes = [IsStudentUser]
     
-    def get(self,request):
-        user = request.user
-        classroom_ids = ClassRoom_Student.objects.filter(student=user).values_list("classroom_id",flat=True)
-        teacher_ids = ClassRoom.objects.filter(pk__in=classroom_ids).values_list("teacher_id",flat=True)
-        news = News.objects.filter(created_by__in=teacher_ids,classroom_id__in=classroom_ids)
-        serializer = NewsSerializer(news,many=True)
-        return Response(serializer.data)
+#     def get(self,request):
+#         user = request.user
+#         classroom_ids = ClassRoom_Student.objects.filter(student=user).values_list("classroom_id",flat=True)
+#         teacher_ids = ClassRoom.objects.filter(pk__in=classroom_ids).values_list("teacher_id",flat=True)
+#         news = News.objects.filter(created_by__in=teacher_ids,classroom_id__in=classroom_ids)
+#         serializer = NewsSerializer(news,many=True)
+#         return Response(serializer.data)
+
+
+class ReviewsNewsApiView(viewsets.ModelViewSet):
+    serializer_class = NewsSerializer
+    filter_backends=[DjangoFilterBackend,ReviewsNewsFilterBakend]
+    queryset = News.objects.all()
+
+
 
 class ReviewsExerciseApiView(APIView):
     permission_classes =[IsStudentUser]
@@ -146,10 +157,12 @@ class FullAccessNewApiView(viewsets.ModelViewSet):
     queryset = News.objects.all()
     permission_classes =[IsAdminUser]
     serializer_class = NewsSerializer
-    filter_backends =[DjangoFilterBackend,filters.SearchFilter,filters.OrderingFilter]
-    filter_fields = ["lesson","classroom","created_by"]
-    search_fields = ["id","lesson__name","classroom__name","created_by__username"]
-    ordering_fields = ["id","lessonــname","classroom__name","created_by__username"]
+    # filter_backends =[DjangoFilterBackend,filters.SearchFilter,filters.OrderingFilter]
+    # filter_fields = ["lesson","classroom","created_by"]
+    # search_fields = ["id","lesson__name","classroom__name","created_by__username"]
+    # ordering_fields = ["id","lessonــname","classroom__name","created_by__username"]
+    filter_backends=[DjangoFilterBackend]
+    filterset_class = NewsFilter
 
 class FullAccessExerciseApiView(viewsets.ModelViewSet):
     queryset = Exercise.objects.all()
@@ -226,3 +239,9 @@ class AddUserClassRoom(generics.GenericAPIView):
                 return Response({"error":"invalid role"})
         
         return Response(serializer.errors)
+
+class NewsFilterApiView(viewsets.ModelViewSet):
+    queryset = News.objects.all()
+    serializer_class = NewsSerializer
+    filter_backends=[DjangoFilterBackend,NewsFilterBackend]
+    filterset_class = NewsFilter

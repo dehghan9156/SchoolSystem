@@ -14,11 +14,11 @@ from pathlib import Path
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',  
         'NAME': 'schoolsystemsql',
         'USER': 'postgres',
         'PASSWORD': 'test123',
-        'HOST': 'localhost',
+        'HOST': 'postgis',
         'PORT': '5432',
     }
 }
@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.gis',
     'rest_framework',
     'accounts',
     'drf_yasg',
@@ -186,3 +187,6 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+import ctypes.util
+GDAL_LIBRARY_PATH = ctypes.util.find_library('gdal')

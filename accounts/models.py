@@ -5,6 +5,10 @@ from django.contrib.auth.models import (
     PermissionsMixin,
 )
 from django.utils.translation import gettext_lazy as _
+from django.contrib.gis.db import models
+from django.contrib.gis.geos import Point
+
+
 
 class UserManager(BaseUserManager):
 
@@ -48,8 +52,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     role = models.CharField(max_length=10, choices=Roel_User,blank=False,null=False)
     confirmation = models.BooleanField(default=False)  
     biography = models.TextField(blank=True, null=True) 
-    longitude = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)  
-    latitude = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)
+    # longitude = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)  
+    # latitude = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)
+    location = models.PointField(default=Point(0,0))
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)

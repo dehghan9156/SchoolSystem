@@ -29,3 +29,6 @@ class ReviewsNewsFilterBakend(filters.BaseFilterBackend):
         teacher_ids = ClassRoom.objects.filter(pk__in=classroom_ids).values_list("teacher_id",flat=True)
         news = News.objects.filter(created_by__in=teacher_ids,classroom_id__in=classroom_ids)
         return news 
+
+
+    

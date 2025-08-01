@@ -1,13 +1,15 @@
 from django.db import models
+from django.contrib.gis.db import models
+from django.contrib.gis.geos import Point
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
 class School(models.Model):
     name = models.CharField(max_length=150)
-    longitude = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)  
-    latitude = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)
-    
+    # longitude = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)  
+    # latitude = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)
+    location = models.PointField(default=Point(0,0))
     def __str__(self):
         return f"{self.name}"
 

@@ -38,6 +38,11 @@ class CustomAnswerExercise(ModelAdmin):
 class CustomClassroomMember(ModelAdmin):
     list_display = ["pk","user","classroom","role"]
 
+class CustomLogs(ModelAdmin):
+    list_display = ["pk","user","path","date","type_log","description"]
+
+
+
 admin.site.register(School,CustomSchool)
 admin.site.register(Teacher_School,CustomTeacher_school)
 admin.site.register(ClassRoom,CustomClassRoom)
@@ -48,3 +53,4 @@ admin.site.register(Exercise,CustomExercise)
 admin.site.register(ClassRoom_Student,CustomClassRoom_Student)
 admin.site.register(AnswerExercise,CustomAnswerExercise)
 admin.site.register(ClassRoomMember,CustomClassroomMember)
+admin.site.register(Logs,CustomLogs)

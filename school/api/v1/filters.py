@@ -24,11 +24,14 @@ class NewsFilterBackend(filters.BaseFilterBackend):
         
 
 class ReviewsNewsFilterBakend(filters.BaseFilterBackend):
+    
     def filter_queryset(self, request, queryset, view):
         classroom_ids = ClassRoom_Student.objects.filter(student_id=request.user.id).values_list("classroom_id",flat=True)
         teacher_ids = ClassRoom.objects.filter(pk__in=classroom_ids).values_list("teacher_id",flat=True)
         news = News.objects.filter(created_by__in=teacher_ids,classroom_id__in=classroom_ids)
         return news 
+
+
 
 
     

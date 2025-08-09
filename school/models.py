@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.gis.db import models
 from django.contrib.gis.geos import Point
+
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
@@ -86,7 +87,6 @@ class AnswerExercise(models.Model):
     answer_file = models.FileField(upload_to="answer_exercise/",blank=True,null=True)
     submited_date = models.DateTimeField(auto_now_add=True)
 
-
 class ClassRoomMember(models.Model):
     Role_User = [
         ('teacher','Teacher'),
@@ -95,4 +95,18 @@ class ClassRoomMember(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
     classroom = models.ForeignKey(ClassRoom,on_delete=models.CASCADE)
     role = models.CharField(choices=Role_User,max_length=150)
-    
+                                                             
+class Logs(models.Model):
+    Choice_Log=[
+        ('info','Info'),
+        ('debug','Debug'),
+        ('warning','Warning'),
+        ('error','Error'),
+        ('critical','Critical')
+    ]
+    user = models.ForeignKey(User,on_delete=models.SET_NULL,blank=True,null=True)
+    path = models.CharField(max_length=250)
+    date = models.DateTimeField(auto_now_add=True)
+    type_log = models.CharField(max_length=250,choices=Choice_Log)
+    description = models.TextField(blank=True,null=True)
+

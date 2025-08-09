@@ -1,17 +1,25 @@
 from rest_framework import serializers
 from school.models import *
 from django.contrib.auth import get_user_model
-
+from django.contrib.gis.db import models
+from django.contrib.gis.geos import Point
+from rest_framework_gis.serializers import GeoFeatureModelSerializer
 User = get_user_model()
 
 
-class AddSchoolSerializer(serializers.Serializer):
-    name = serializers.CharField()
-    longitude = serializers.DecimalField(max_digits=9, decimal_places=6)
-    latitude = serializers.DecimalField(max_digits=9, decimal_places=6)
+# class AddSchoolSerializer(serializers.ModelSerializer):
+#     name = serializers.CharField()
+#     location = serializers.
 
-    def create(self, validated_data):
-        return School.objects.create(**validated_data)
+#     def create(self, validated_data):
+#         return School.objects.create(**validated_data)
+
+class AddSchoolSerializer(GeoFeatureModelSerializer):
+    class Meta:
+        model = School
+        geo_field = "location"
+        fields=("name","location")
+
 
 class AddTeacherToSchoolSerializer(serializers.Serializer):
     teacher_id = serializers.IntegerField()
@@ -124,3 +132,11 @@ class ClassRoomMemberSerializer(serializers.ModelSerializer):
 class AddUserClassRoomSerializer(serializers.Serializer):
     user_id = serializers.IntegerField()
     role = serializers.ChoiceField(choices=[("teacher","Teacher"),("student","Student")])
+
+class SchoolSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = School
+        fields =["name","location"]
+
+class UserLogsSerializer(serializers.Serializer):
+    username = serializers.CharField()

@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.gis',
     'rest_framework',
+    'rest_framework_gis',
     'accounts',
     'drf_yasg',
     'rest_framework_simplejwt',
@@ -77,6 +78,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # 'school.middleware.login_middleware.Login',
+    'school.middleware.status_middleware.StatusApi',
 ]
 
 ROOT_URLCONF = 'schoolsystem.urls'
@@ -154,7 +157,10 @@ TIME_ZONE = 'Asia/Tehran'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
+import os
+
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR,'staticfile')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
@@ -190,3 +196,39 @@ CHANNEL_LAYERS = {
 
 import ctypes.util
 GDAL_LIBRARY_PATH = ctypes.util.find_library('gdal')
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'simple': {
+            'format': '[{levelname}] {message}',
+            'style': '{',
+        },
+        'verbose': {
+            'format': '[{asctime}] [{levelname}] {name}: {message}',
+            'style': '{',
+        },
+    },
+
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+        'file': {
+            'level':'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'logs/debug.log',
+            'formatter': 'verbose',
+        },
+    },
+
+    'loggers': {
+    '': {
+        'handlers': ['console','file'],
+        'level': 'DEBUG',  # یا INFO
+        'propagate': True,
+    },
+}
+}

@@ -10,6 +10,9 @@ RUN apt-get update && apt-get install -y \
 ENV CPLUS_INCLUDE_PATH=/usr/include/gdal
 ENV C_INCLUDE_PATH=/usr/include/gdal
 
+ENV PYTHONUNBUFFERED=1
+
+
 WORKDIR /web
 COPY requirements.txt .
 

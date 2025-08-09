@@ -18,7 +18,8 @@ from .permissions import IsStudentUser,IsTeacherUser
 from django.utils import timezone
 from django_filters.rest_framework import DjangoFilterBackend,OrderingFilter
 from rest_framework import filters
-from django.contrib.gis.measure import Distance
+# from django.contrib.gis.measure import Distance
+from django.contrib.gis.db.models.functions import Distance
 from guardian.shortcuts import assign_perm
 from django.http import HttpResponse
 from guardian.shortcuts import assign_perm
@@ -26,7 +27,11 @@ from django.contrib.auth.models import Group
 from rest_framework.decorators import action
 from rest_framework.permissions import DjangoModelPermissions,DjangoObjectPermissions
 from .filters import *
+import logging
+import os
 
+
+logger = logging.getLogger('django')
 
 
 class AddSchoolApiView(generics.GenericAPIView):
@@ -36,6 +41,7 @@ class AddSchoolApiView(generics.GenericAPIView):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save()
+            logger.info("add school ok")
             return Response({"message":"New School Add Successfully."},status=status.HTTP_200_OK)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
@@ -245,3 +251,46 @@ class NewsFilterApiView(viewsets.ModelViewSet):
     serializer_class = NewsSerializer
     filter_backends=[DjangoFilterBackend,NewsFilterBackend]
     filterset_class = NewsFilter
+
+class FindNearestSchoolApiView(generics.GenericAPIView):
+    queryset = School.objects.all()
+    def get(self,request):
+        user = request.user
+        print(user.name)
+        user_location = user.location
+
+        if not request.user.is_authenticated or not user_location:
+            return Response({"message":"user is not authenticate or user is not set location"})
+
+        if not hasattr(user, 'location'):
+            return Response({"message":"user is not location"})
+
+        print(user_location)
+        radius = 5000 #metr
+        
+        nearest_school = School.objects.annotate(distance=Distance('location',user_location)).filter(distance__lte=radius).order_by('distance')
+        serializer= SchoolSerializer(nearest_school,many=True)
+
+        return Response(serializer.data)
+
+class ShowLogsApiView(APIView):
+    permission_classes=[IsAdminUser]
+    
+    def post(self,request):
+        logs_file_path = os.path.join(settings.BASE_DIR, "logs/debug.log")
+        serializer = UserLogsSerializer(data=request.data)
+        lst_logs =[]
+        if serializer.is_valid():
+            username = serializer.validated_data["username"]
+            search_str = f"django: {username} called"
+            try :
+                with open(logs_file_path, "r") as f:
+                    for line in f :
+                        if search_str in line:
+                            lst_logs.append(line.strip())
+                            
+            except FileNotFoundError:
+                return Response({"error": "Log file not found."}, status=status.HTTP_404_NOT_FOUND)
+
+            return Response({"logs":lst_logs},status=status.HTTP_200_OK)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)

@@ -31,4 +31,6 @@ urlpatterns = [
     path("review/lesson/",views.ReviewLessonaApiView.as_view(),name="review-lesson"),
     path("lessons/public/",views.LessonPublicApiView.as_view(),name="lessons-public"),
     path("add/user/classroom/<int:pk>/",views.AddUserClassRoom.as_view(),name="add-user-classroom"),
+    path("find/school/",views.FindNearestSchoolApiView.as_view(),name="find-nearest-school"),
+    path("show/logs/",views.ShowLogsApiView.as_view(),name="show-logs"),
 ]

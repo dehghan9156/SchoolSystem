@@ -5,7 +5,7 @@ from accounts.models import *
 
 class CustomUserAdmin(UserAdmin):
     model = User
-    list_display = ['pk','name','family','role','confirmation']
+    list_display = ['pk','name','family','role','confirmation','location']
     fieldsets = (
         ("Authentication", {"fields": ("username", "password","codemeli","role","name","family","biography")}),
         (
